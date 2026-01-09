@@ -264,7 +264,7 @@ The RecParticles differs from VtxTracks in, firstly, the type of branch (Particl
 
 	pid_trd - Trd pid hypothesis which is the most probable particle type
 
-In addition, when running with Trd, the RICH electron hyposthesis will be added:
+	In addition, when running with Trd, the RICH electron hyposthesis will be added:
 
 	electron_rich - RICH electron hypothesis: true = electron, false = no electron
 
