@@ -47,13 +47,15 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb -g -DDEBUG -D__DEBUG -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -ftree-vectorize -ffast-math -DNODEBUG")
 message(STATUS "Using CXX flags for ${CMAKE_BUILD_TYPE}: ${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}}")
 
-add_subdirectory(src)
+add_subdirectory(src_tof)
+add_subdirectory(src_trd)
+add_subdirectory(interface)
 if(${PID_BUNDLED_AT})
     add_subdirectory(at_interface)
 endif()
 add_subdirectory(tasks)
 
- # Packaging routine
+# Packaging routine
 # For complete explanation
 # @see https://cmake.org/cmake/help/git-master/manual/cmake-packages.7.html#creating-packages
 include(GenerateExportHeader)

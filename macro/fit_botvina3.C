@@ -47,7 +47,7 @@ void fit_botvina3() {
   std::unique_ptr<TFile> fCuts{TFile::Open(cutsFileName, "read")};
 
   Pid::Fitter tof;
-  Pid::Getter getter;
+  Pid::GetterTof getter;
   float xmin, xmax, ymin, ymax;
 
   cout << "\n\npionpos\n";
@@ -65,13 +65,13 @@ void fit_botvina3() {
   TF1 pionpos_1("pionpos_1", "pol2", xmin, xmax);
   TF1 pionpos_2("pionpos_2", "pol5", xmin, xmax);
 
-  Pid::ParticleFit pionpos(PidParticles::kPionPos);
+  Pid::ParticleFit pionpos(PidTofParticles::kPionPos);
   pionpos.SetParametrization({pionpos_0, pionpos_1, pionpos_2});
   pionpos.SetFitFunction(fit_pionpos);
   pionpos.SetRange(xmin, xmax);
   pionpos.SetIsFitted();
 
-  tof.AddParticle(pionpos, PidParticles::kPionPos);
+  tof.AddParticle(pionpos, PidTofParticles::kPionPos);
   tof.SetHisto2D(std::move(hpionpos_cut));
   tof.SetRangeX(xmin, 8.);
   tof.SetRangeY(ymin, ymax);
@@ -95,13 +95,13 @@ void fit_botvina3() {
   TF1 kaonpos_1("kaonpos_1", "pol2", xmin, xmax);
   TF1 kaonpos_2("kaonpos_2", "pol6", xmin, xmax);
 
-  Pid::ParticleFit kaonpos(PidParticles::kKaonPos);
+  Pid::ParticleFit kaonpos(PidTofParticles::kKaonPos);
   kaonpos.SetParametrization({kaonpos_0, kaonpos_1, kaonpos_2});
   kaonpos.SetFitFunction(fit_kaonpos);
   kaonpos.SetRange(xmin, xmax);
   kaonpos.SetIsFitted();
 
-  tof.AddParticle(kaonpos, PidParticles::kKaonPos);
+  tof.AddParticle(kaonpos, PidTofParticles::kKaonPos);
   tof.SetHisto2D(std::move(hkaonpos_cut));
   tof.SetRangeX(xmin, xmax);
   tof.SetRangeY(ymin, ymax);
@@ -125,13 +125,13 @@ void fit_botvina3() {
   TF1 proton_1("proton_1", "pol11", .3, 12.);
   TF1 proton_2("proton_2", "pol8", .3, 12.);
 
-  Pid::ParticleFit proton(PidParticles::kProton);
+  Pid::ParticleFit proton(PidTofParticles::kProton);
   proton.SetParametrization({proton_0, proton_1, proton_2});
   proton.SetFitFunction(fit_proton);
   proton.SetRange(xmin, xmax);
   proton.SetIsFitted();
 
-  tof.AddParticle(proton, PidParticles::kPionPos);
+  tof.AddParticle(proton, PidTofParticles::kPionPos);
   tof.SetHisto2D(std::move(hproton_cut));
   tof.SetRangeX(xmin, 8.);
   tof.SetRangeY(ymin, ymax);
@@ -146,7 +146,7 @@ void fit_botvina3() {
   hhe3_cut->Rebin2D(10, 10);
   xmin = 1.5, xmax = 7., ymin = 1., ymax = 3.;
   tof.SetChi2Max(10);
-  Pid::ParticleFit he3(PidParticles::kHe3);
+  Pid::ParticleFit he3(PidTofParticles::kHe3);
   TF1 he3_fit("fit_he3", "gaus", ymin, ymax);
   he3_fit.SetParNames("p9", "p10", "p11");
   he3_fit.SetParLimits(0, 0., 1.e6);
@@ -160,7 +160,7 @@ void fit_botvina3() {
   he3.SetFitFunction(he3_fit);
   he3.SetRange(xmin, xmax);
   he3.SetIsFitted();
-  tof.AddParticle(he3, PidParticles::kHe3);
+  tof.AddParticle(he3, PidTofParticles::kHe3);
   tof.SetHisto2D(std::move(hhe3_cut));
   tof.SetRangeX(xmin, xmax);
   tof.SetRangeY(ymin, ymax);
@@ -184,13 +184,13 @@ void fit_botvina3() {
   TF1 deutron_1("deutron_1", "pol10", xmin, xmax);
   TF1 deutron_2("deutron_2", "pol3", xmin, xmax);
 
-  Pid::ParticleFit deutron(PidParticles::kProton);
+  Pid::ParticleFit deutron(PidTofParticles::kProton);
   deutron.SetParametrization({deutron_0, deutron_1, deutron_2});
   deutron.SetFitFunction(fit_deutron);
   deutron.SetRange(xmin, xmax);
   deutron.SetIsFitted();
 
-  tof.AddParticle(deutron, PidParticles::kDeutron);
+  tof.AddParticle(deutron, PidTofParticles::kDeutron);
   tof.SetHisto2D(std::move(hdeutron_cut));
   tof.SetRangeX(xmin, xmax);
   tof.SetRangeY(ymin, ymax);
@@ -201,7 +201,7 @@ void fit_botvina3() {
 
   cout << "\n\nbgpos\n";
   xmin = 0.3, xmax = 20., ymin = -3., ymax = 3.;
-  Pid::ParticleFit bgpos(PidParticles::kBgPos);
+  Pid::ParticleFit bgpos(PidTofParticles::kBgPos);
   TF1 bgpos_fit("fit_bgpos", "pol2", ymin, ymax);
   bgpos_fit.SetParNames("p15", "p16", "p17");
   TF1 bgpos_0("bgpos_0", "pol3", xmin, xmax);
@@ -223,12 +223,12 @@ void fit_botvina3() {
   proton.SetIsFixed({false, true, true});
   deutron.SetIsFixed({false, true, true});
   he3.SetIsFixed({false, true, true});
-  tof.AddParticle(pionpos, PidParticles::kPionPos);
-  tof.AddParticle(kaonpos, PidParticles::kKaonPos);
-  tof.AddParticle(proton, PidParticles::kProton);
-  tof.AddParticle(deutron, PidParticles::kDeutron);
-  tof.AddParticle(he3, PidParticles::kHe3);
-  tof.AddParticle(bgpos, PidParticles::kBgPos);
+  tof.AddParticle(pionpos, PidTofParticles::kPionPos);
+  tof.AddParticle(kaonpos, PidTofParticles::kKaonPos);
+  tof.AddParticle(proton, PidTofParticles::kProton);
+  tof.AddParticle(deutron, PidTofParticles::kDeutron);
+  tof.AddParticle(he3, PidTofParticles::kHe3);
+  tof.AddParticle(bgpos, PidTofParticles::kBgPos);
 
   tof.SetHisto2D(std::move(hpos));
   tof.SetRangeX(xmin, xmax);
@@ -236,12 +236,12 @@ void fit_botvina3() {
   tof.SetOutputFileName("allpos.root");
   tof.Fit();
 
-  getter.AddParticle(tof.GetParticleSpecie(PidParticles::kPionPos), PidParticles::kPionPos);
-  getter.AddParticle(tof.GetParticleSpecie(PidParticles::kKaonPos), PidParticles::kKaonPos);
-  getter.AddParticle(tof.GetParticleSpecie(PidParticles::kProton), PidParticles::kProton);
-  getter.AddParticle(tof.GetParticleSpecie(PidParticles::kHe3), PidParticles::kHe3);
-  getter.AddParticle(tof.GetParticleSpecie(PidParticles::kDeutron), PidParticles::kDeutron);
-  getter.AddParticle(tof.GetParticleSpecie(PidParticles::kBgPos), PidParticles::kBgPos);
+  getter.AddParticle(tof.GetParticleSpecie(PidTofParticles::kPionPos), PidTofParticles::kPionPos);
+  getter.AddParticle(tof.GetParticleSpecie(PidTofParticles::kKaonPos), PidTofParticles::kKaonPos);
+  getter.AddParticle(tof.GetParticleSpecie(PidTofParticles::kProton), PidTofParticles::kProton);
+  getter.AddParticle(tof.GetParticleSpecie(PidTofParticles::kHe3), PidTofParticles::kHe3);
+  getter.AddParticle(tof.GetParticleSpecie(PidTofParticles::kDeutron), PidTofParticles::kDeutron);
+  getter.AddParticle(tof.GetParticleSpecie(PidTofParticles::kBgPos), PidTofParticles::kBgPos);
 
   tof.Clear();
 
@@ -260,13 +260,13 @@ void fit_botvina3() {
   TF1 pionneg_1("pionneg_1", "pol2", xmin, xmax);
   TF1 pionneg_2("pionneg_2", "pol5", xmin, xmax);
 
-  Pid::ParticleFit pionneg(PidParticles::kPionNeg);
+  Pid::ParticleFit pionneg(PidTofParticles::kPionNeg);
   pionneg.SetParametrization({pionneg_0, pionneg_1, pionneg_2});
   pionneg.SetFitFunction(fit_pionneg);
   pionneg.SetRange(xmin, xmax);
   pionneg.SetIsFitted();
 
-  tof.AddParticle(pionneg, PidParticles::kPionNeg);
+  tof.AddParticle(pionneg, PidTofParticles::kPionNeg);
   tof.SetHisto2D(std::move(hpionneg_cut));
   tof.SetRangeX(xmin, xmax);
   tof.SetRangeY(ymin, ymax);
@@ -290,13 +290,13 @@ void fit_botvina3() {
   TF1 kaonneg_1("kaonneg_1", "pol2", xmin, xmax);
   TF1 kaonneg_2("kaonneg_2", "pol2", xmin, xmax);
 
-  Pid::ParticleFit kaonneg(PidParticles::kKaonNeg);
+  Pid::ParticleFit kaonneg(PidTofParticles::kKaonNeg);
   kaonneg.SetParametrization({kaonneg_0, kaonneg_1, kaonneg_2});
   kaonneg.SetFitFunction(fit_kaonneg);
   kaonneg.SetRange(xmin, xmax);
   kaonneg.SetIsFitted();
 
-  tof.AddParticle(kaonneg, PidParticles::kKaonNeg);
+  tof.AddParticle(kaonneg, PidTofParticles::kKaonNeg);
   tof.SetHisto2D(std::move(hkaonneg_cut));
   tof.SetRangeX(xmin, xmax);
   tof.SetRangeY(ymin, ymax);
@@ -307,7 +307,7 @@ void fit_botvina3() {
 
   cout << "\n\nbgneg\n";
   xmin = -10., xmax = -0.25, ymin = -1., ymax = 2.;
-  Pid::ParticleFit bgneg(PidParticles::kBgNeg);
+  Pid::ParticleFit bgneg(PidTofParticles::kBgNeg);
   TF1 bgneg_0("bgneg_0", "pol3", xmin, xmax);//bgneg_0.SetParameters(100, 0, 0);
   TF1 bgneg_1("bgneg_1", "pol5", xmin, xmax);//bgneg_1.SetParameters(0, 0, 0);
   TF1 bgneg_2("bgneg_2", "pol5", xmin, xmax);//bgneg_2.SetParameters(0.0, 0.0, 0);
@@ -330,9 +330,9 @@ void fit_botvina3() {
   tof.SetChi2Max(1e6);
   pionneg.SetIsFixed({false, true, true});
   kaonneg.SetIsFixed({false, true, true});
-  tof.AddParticle(pionneg, PidParticles::kPionNeg);
-  tof.AddParticle(kaonneg, PidParticles::kKaonNeg);
-  tof.AddParticle(bgneg, PidParticles::kBgNeg);
+  tof.AddParticle(pionneg, PidTofParticles::kPionNeg);
+  tof.AddParticle(kaonneg, PidTofParticles::kKaonNeg);
+  tof.AddParticle(bgneg, PidTofParticles::kBgNeg);
 
   tof.SetHisto2D(std::move(hneg));
   tof.SetRangeX(xmin, xmax);
@@ -340,9 +340,9 @@ void fit_botvina3() {
   tof.SetOutputFileName("allneg.root");
   tof.Fit();
 
-  getter.AddParticle(tof.GetParticleSpecie(PidParticles::kPionNeg), PidParticles::kPionNeg);
-  getter.AddParticle(tof.GetParticleSpecie(PidParticles::kKaonNeg), PidParticles::kKaonNeg);
-  getter.AddParticle(tof.GetParticleSpecie(PidParticles::kBgNeg), PidParticles::kBgNeg);
+  getter.AddParticle(tof.GetParticleSpecie(PidTofParticles::kPionNeg), PidTofParticles::kPionNeg);
+  getter.AddParticle(tof.GetParticleSpecie(PidTofParticles::kKaonNeg), PidTofParticles::kKaonNeg);
+  getter.AddParticle(tof.GetParticleSpecie(PidTofParticles::kBgNeg), PidTofParticles::kBgNeg);
 
   tof.Clear();
 
