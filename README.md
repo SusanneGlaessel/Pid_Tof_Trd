@@ -164,7 +164,7 @@ The task which runs the calculation of mc-probabilities is tasks/calculate_prob_
 
 Mc-probabilities for all particle species are calculated for every *dE/dx*-*p*  for all histograms with two methods: Total probability and likelyhood method (see PID_with_Trd_dEdx.pdf for more details). The probabilities are saved in pid_getter_trd.root. The getter is required for the filling procedure. The probabilites for all histograms in mcfilename.root are also saved in *mcfilename*_probabilities.root.
 
-*** Additional information: ***
+**** Additional information on how to work the pid_getter_trd.root independently of the filling procedure: ****
 
 The Pid::GetterTrd contains the results of the probability calculations. For a reconstructed track with certain *dE/dx*  for each Trd-hit and *p*  value, probabilities can get obtained for the total proability method with:
 
@@ -246,22 +246,27 @@ species
 	-- min_hits: minimum number of required hits per track
 
 	optional:
+
 	-- purity: minimum purity for the pid-hypothesis (most probable particle species) (default purity is 0)
 
 After running this exacutable a pid.analysistree.root file is produced.
 It is based on the input file. The branch VtxTracks is replaced with RecParticles branch.
 The RecParticles differs from VtxTracks in, firstly, the type of branch (Particles instead of Track), and secondly - in few additional fields:
 - for Tof:
+
 	prob_K, prob_d, prob_p, prob_pi, prob_bg - probability of the particle to be a kaon, deuteron, proton, pion or background (undefined type).
 
 	pid - Tof pid hypothesis which is the most probable particle type
 
 - for Trd:
+
 	prob_trd_p, prob_trd_pi, prob_trd_K, prob_trd_d, prob_trd_t, prob_trd_He3, prob_trd_He4, prob_trd_e, prob_trd_mu, prob_trd_bg - probability of the particle to be a proton, pion, kaon, deuteron, triton, He3, He4, electron, myon or background (undefined type).
 
-	pid - Trd pid hypothesis which is the most probable particle type
+	pid_trd - Trd pid hypothesis which is the most probable particle type
 
-In addition, when running with Trd, the RICH electron hyposthesis will be added: electron_rich
+In addition, when running with Trd, the RICH electron hyposthesis will be added:
+
+	electron_rich - RICH electron hypothesis: true = electron, false = no electron
 
 ### Doxygen documentation
     doxygen docs/Doxyfile
