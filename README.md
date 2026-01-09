@@ -1,15 +1,15 @@
 # Particle Identification Framework
 
 ## General information
-The Pid identifies hadrons based on the Tof-*m*<sup>2 and/or the Trd-*dE/dx*. It assigns a probability to be a certain particle species to
-every track depending on its *m*<sup>2 and its momentum and/or on its Trd-dEdx and its momentum.
+The Pid framework identifies hadrons based on the Tof-*m*<sup>2</sup> and/or the Trd-*dE/dx*. It assigns a probability to be a certain particle species to
+every track depending on its *m*<sup>2</sup> and its momentum and/or on its Trd-dEdx and its momentum.
 
-The procedure of particle identification with the  Tof-*m*<sup>2 is described in Sec. 4.4 of this [thesis](https://publikationen.ub.uni-frankfurt.de/opus4/frontdoor/deliver/index/docId/51779/file/main.pdf).
+The procedure of particle identification with the  Tof-*m*<sup>2</sup> is described in Sec. 4.4 of this [thesis](https://publikationen.ub.uni-frankfurt.de/opus4/frontdoor/deliver/index/docId/51779/file/main.pdf).
 It consists of two steps - determination of particle type hypothesis (fitting) and application of hypothesis to a set of particles (filling).
 
-The procedure of particle identification with the the Trd-*dE/dx* is described in Introduction_PID_with_Trd_dEdx.pdf. It constists of three steps - 0) Creating of MC-input, 1) Calculating MC-probabilities and 2) Assigning probabilities and pid hypothesis to a set of particles (filling). In addition the separtion of electrons and pions with the RICH detector is applied.
+The procedure of particle identification with the the Trd-*dE/dx* is described in PID_with_Trd_dEdx.pdf. It constists of three steps - creating of MC-input, calculating MC-probabilities and assigning probabilities and pid hypothesis to a set of particles (filling). In addition, the separtion of electrons and pions with the RICH detector is applied.
 
-How to run these steps is described below, in the section "First Run".
+Running of these steps is described below, in section "First Run".
 
 ## Installation
 ROOT6 is needed for installation.
@@ -53,9 +53,9 @@ The following steps need to be performed (for more details see below):
 
 - Preparation: creating mc-histograms
 
--- for Tof pid: preparation outside of the Pid-framework
+   -- for Tof pid: preparation outside of the Pid-framework
 
--- for Trd pid run:
+   -- for Trd pid run:
 
 		./create_mcinput_trd filelist.sh outfilename (for one analysistree.root)
 
@@ -65,28 +65,31 @@ The following steps need to be performed (for more details see below):
 
 - Step 1: producing probabilities that are required to identify the tracks.
 
--- for Tof pid:
+   -- for Tof pid:
 
 		./run_pid_dcm12
 
--- for Trd pid:
+   -- for Trd pid:
 
 		./calculate_mcprob_trd mcfilename
 	
 - Step 2: assigning probabilities for particle species and a pid-hypothesis to reconstructed tracks from an analysistree and writing them into a new analysistree.
--- for Tof and Trd pid simoultanously:
 
-	./fill_pid 0 filelist.txt outputfilename pid_file_tof pid_file_trd truncation_mode probability_mode min_hits (purity)
+	-- for Tof and Trd pid simoultanously:
 
--- for Tof pid only:
+		./fill_pid 0 filelist.txt outputfilename pid_file_tof pid_file_trd truncation_mode probability_mode min_hits (purity)
 
-	./fill_pid 1 filelist.txt outputfilename pid_file_tof
+   -- for Tof pid only:
 
--- for Trd pid only:
+		./fill_pid 1 filelist.txt outputfilename pid_file_tof
 
-	./fill_pid 2 filelist.txt outputfilename pid_file_trd truncation_mode probability_mode min_hits (purity)
+   -- for Trd pid only:
+
+		./fill_pid 2 filelist.txt outputfilename pid_file_trd truncation_mode probability_mode min_hits (purity)
 
 The preparation and the first step only need to be performed once.
+
+In the following the above steps are described in more detail.
 
 ### Preparation: Creating MC-Input
 
@@ -104,7 +107,7 @@ The MC-input file for a specific system and energy needs to be created by runnin
 - truncation (1-4) (including average)
 - all tracks/hits and separated by particles species (MC-matching information)
 
-An example file can be found in input/dEdx_p.jul25.phqmd.auau.12agev.root.
+An example file for 5 million minbias Au+Au events at *p*<sub>beam</sub> = 12 AGeV reconstructed with cbmroot jul25 can be found in input/dEdx_p.jul25.phqmd.auau.12agev.root.
 
 To run the executable type:
 
@@ -159,57 +162,65 @@ The task which runs the calculation of mc-probabilities is tasks/calculate_prob_
 
 	./calculate_mcprob_trd mcfilename 
 
-Mc-probabilities for all particle species are calculated for every *dE/dx*-*p*  for all histograms with two methods: Total probability and likelyhood method (see Introduction_PID_with_Trd_dEdx.pdf for more details). The probabilities are saved in pid_getter_trd.root. The getter is required for the filling procedure. The probabilites for all histograms in mcfilename.root are also saved in mcfilename_probabilities.root.
+Mc-probabilities for all particle species are calculated for every *dE/dx*-*p*  for all histograms with two methods: Total probability and likelyhood method (see PID_with_Trd_dEdx.pdf for more details). The probabilities are saved in pid_getter_trd.root. The getter is required for the filling procedure. The probabilites for all histograms in mcfilename.root are also saved in *mcfilename*_probabilities.root.
 
 *** Additional information: ***
 
 The Pid::GetterTrd contains the results of the probability calculations. For a reconstructed track with certain *dE/dx*  for each Trd-hit and *p*  value, probabilities can get obtained for the total proability method with:
+
 	pid_getter_trd->GetTrdProbabilities(trdtrack);
 
 and for the likelihood method with:
+
 	pid_getter_trd->GetTrdProbabilitiesMulti(trdtrack);
 
 The trdtrack is an object of the folllowing form:
+
 	TrdContainer trdtrack(mom, pT, charge, nhits_trd, dEdx_hits);
 
 Options for the application of probabilities and pid hypothesis (see below for a more detailed explanation of options) can be set with:
 
 	pid_getter_trd->SetProbabilityMode(mode); // default is total probability method
 	pid_getter_trd->SetTruncationMode(mode); // default is average
-	pid_getter_trd->SetMinHits(minhits);           // default is 1 hit
-	pid_getter_trd->SetPurity(minpurity);           // default is 0.0
+	pid_getter_trd->SetMinHits(minhits);       // default is 1 hit
+	pid_getter_trd->SetPurity(minpurity);       // default is 0.0
 
-For example, for a postive track with an average *dE/dx* = 25 keV/cm and *p* = 5 GeV/*c*, the result with the total probability method is:
+For example, for a postive track with an average *dE/dx* = 25 keV/cm and *p* = 5 GeV/*c*, the obtained result with the total probability method is in the form:
+
 	(std::map<int, double>) {(2212, 0.5803), (211, 0.2162), (321, 0.0366), (1000010020, 0.0281), (1000010030, 0.0011), (1000020030, 0.0087), (1000020040 = 0.0009, (-11; 0.1277, (-13, 0.0004), (1, 0.0001) }
 	// Here 1 stands for background
 
 Alternatively, probabilites can get applied for the average mode and for the total probability method direcly with:
 
 	getter->GetTrdProbabilitiesTotalAverage(mom, dEdx, charge, nhits_trd);
+	// with dEdx = average dE/dx of a track
 
-with dEdx = average dEdx of a track
-
-and for the likelihood method with
+and for the likelihood method with:
 	
 	getter->GetTrdProbabilitiesLikelihoodAverage(mom, dEdx_hits, charge);
-
-with dEdx_hits = vector of dEdx hits of a track
+	// with dEdx_hits = dE/dx vector for hits of a track
 
 The macro/RunGetterTrd.C shows some examples on how to access the pid_getter_trd.root to assign probabilities to a track. I also produces a set of plots showing probability distributions of different particles species and background.
 
 ### Filling
 Once fitting / probability calculatoin is preformed and the pid_getter_tof.root and/or pid_getter_trd.root files are produced, filling the root-file containing reconstructed tracks can be done - each track will be assigned with probabilities of belonging to different particle species and (optionally) its particle type hypothesis according to the Tof and/or Trd measurement.
 
-This is done in the at_interface/PidFiller.*pp, which are managed by the task tasks/fill_pid.cpp. It produces an executable fill_pid which can be run for either Tof and Trd pid simoultanously or for both separately. The first argument manages the selection of the detector: =0: Tof and Trd, =1: Tof, =2: Trd.
+This is done in the at_interface/PidFiller.*pp, which are managed by the task tasks/fill_pid.cpp. It produces an executable fill_pid which can be run for either Tof and Trd pid simoultanously or for both separately.
+
+The first argument manages the selection of the detector: =0: Tof and Trd, =1: Tof, =2: Trd.
+
 The following arguments depend on the selection of the detector.
 
 To run Tof and Trd pid simoultanously type:
+
 	./fill_pid 0 filelist.txt outputfilename pid_file_tof pid_file_trd truncation_mode probability_mode min_hits (purity)
 
 To run Tof pid only type:
+
 	./fill_pid 1 filelist.txt outputfilename pid_file_tof
 
 To run Trd pid only type
+
 	./fill_pid 2 filelist.txt outputfilename pid_file_trd truncation_mode probability_mode min_hits (purity)
 
 - filelist.list is a text file containing names of the AnalysisTree root-files to be worked on (an example of AnalysisTree file can be downloaded [here](https://sf.gsi.de/f/3ba5a9e3ff5248edba2c/?dl=1)).
@@ -218,34 +229,37 @@ To run Trd pid only type
 
 - for the Trd pid the following options need to get selected:
 
--- truncation_mode: modes for calculation of energy loss for up to 4
+	-- truncation_mode: modes for calculation of energy loss for up to 4
 layers:
 
-=0: <dEdx> average over all hits (default)
+	=0: <dEdx> average over all hits (default)
 
-=1-4: Select hits with lowest dEdx:
+	=1-4: Select hits with lowest dEdx: =1: 1 hit, =2: 2 hits, =3: 3 hits, =4: 4 hits
 
-=1: 1 hit, =2: 2 hits, =3: 3 hits, =4: 4 hits
+	-- probability_mode:
 
--- probability_mode:
+	=0: total probability - probability based on particle multiplicites (default)
 
-=0: total probability - probability based on particle multiplicites (default)
-
-=1: likelihood - probability based on dEdx-distribution of particle
+	=1: likelihood - probability based on dEdx-distribution of particle
 species
 
--- min_hits: minimum number of required hits per track
+	-- min_hits: minimum number of required hits per track
 
-optional:
--- purity: minimum purity for the pid-hypothesis (most probable particle species) (default purity is 0)
+	optional:
+	-- purity: minimum purity for the pid-hypothesis (most probable particle species) (default purity is 0)
 
 After running this exacutable a pid.analysistree.root file is produced.
 It is based on the input file. The branch VtxTracks is replaced with RecParticles branch.
 The RecParticles differs from VtxTracks in, firstly, the type of branch (Particles instead of Track), and secondly - in few additional fields:
-- for Tof: prob_K, prob_d, prob_p, prob_pi, prob_bg - probability of the particle to be a kaon, deuteron, proton, pion or background (undefined type).
-                pid - Tof pid hypothesis which is the most probable particle type
-- for Trd: prob_trd_p, prob_trd_pi, prob_trd_K, prob_trd_d, prob_trd_t, prob_trd_He3, prob_trd_He4, prob_trd_e, prob_trd_mu, prob_trd_bg - probability of the particle to be a proton, pion, kaon, deuteron, triton, He3, He4, electron, myon or background (undefined type).
-                pid - Trd pid hypothesis which is the most probable particle type
+- for Tof:
+	prob_K, prob_d, prob_p, prob_pi, prob_bg - probability of the particle to be a kaon, deuteron, proton, pion or background (undefined type).
+
+	pid - Tof pid hypothesis which is the most probable particle type
+
+- for Trd:
+	prob_trd_p, prob_trd_pi, prob_trd_K, prob_trd_d, prob_trd_t, prob_trd_He3, prob_trd_He4, prob_trd_e, prob_trd_mu, prob_trd_bg - probability of the particle to be a proton, pion, kaon, deuteron, triton, He3, He4, electron, myon or background (undefined type).
+
+	pid - Trd pid hypothesis which is the most probable particle type
 
 In addition, when running with Trd, the RICH electron hyposthesis will be added: electron_rich
 
