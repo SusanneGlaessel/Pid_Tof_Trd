@@ -9,22 +9,21 @@
 #include "ConstantsTrd.h"
 
 #include "TMath.h"
-using namespace std;
 #include <stdexcept>
 
 class TrdContainer {
  public:
   TrdContainer() = default;
   
-  explicit TrdContainer(float mom, float pT, int charge, int nhits_trd, std::array<float,NumberOfTrdLayers> dEdx_hits, std::array<float, NumberOfTruncMode> dEdx_track, int nhits_sel, std::array<bool, NumberOfTrdLayers> hits_sel_index, int mc_pdg, bool dEdxIsScaled = false) : mom_(mom), pT_(pT), charge_(charge), nhits_trd_(nhits_trd), dEdx_hits_(dEdx_hits), dEdx_track_(dEdx_track), nhits_sel_(nhits_sel), hits_sel_index_ (hits_sel_index), mc_pdg_(mc_pdg), dEdx_is_scaled_(dEdxIsScaled) {}
+  TrdContainer(float mom, float pT, int charge, int nhits_trd, std::array<float,NumberOfTrdLayers> dEdx_hits, std::array<float, NumberOfTruncMode> dEdx_track, int nhits_sel, std::array<bool, NumberOfTrdLayers> hits_sel_index, int mc_pdg, bool dEdxIsScaled = false) : mom_(mom), pT_(pT), charge_(charge), nhits_trd_(nhits_trd), dEdx_hits_(dEdx_hits), dEdx_track_(dEdx_track), nhits_sel_(nhits_sel), hits_sel_index_ (hits_sel_index), mc_pdg_(mc_pdg), dEdx_is_scaled_(dEdxIsScaled) {}
   
-  explicit TrdContainer(const float mom, float pT, int charge, int nhits_trd, std::array<float,NumberOfTrdLayers> dEdx_hits, int mc_pdg, bool dEdxIsScaled = false) : mom_(mom), pT_(pT), charge_(charge), nhits_trd_(nhits_trd), dEdx_hits_(dEdx_hits), mc_pdg_(mc_pdg), dEdx_is_scaled_(dEdxIsScaled) {
+  TrdContainer(const float mom, float pT, int charge, int nhits_trd, std::array<float,NumberOfTrdLayers> dEdx_hits, int mc_pdg, bool dEdxIsScaled = false) : mom_(mom), pT_(pT), charge_(charge), nhits_trd_(nhits_trd), dEdx_hits_(dEdx_hits), mc_pdg_(mc_pdg), dEdx_is_scaled_(dEdxIsScaled) {
     nhits_sel_ = 0;
     for (int ihit = 0; ihit < NumberOfTrdLayers; ihit++)
       hits_sel_index_.at(ihit) = false;
   }
   
-  explicit TrdContainer(float mom, float pT, int charge, int nhits_trd, std::array<float,NumberOfTrdLayers> dEdx_hits, bool dEdxIsScaled = false) : mom_(mom), pT_(pT), charge_(charge), nhits_trd_(nhits_trd), dEdx_hits_(dEdx_hits), dEdx_is_scaled_(dEdxIsScaled) {
+  TrdContainer(float mom, float pT, int charge, int nhits_trd, std::array<float,NumberOfTrdLayers> dEdx_hits, bool dEdxIsScaled = false) : mom_(mom), pT_(pT), charge_(charge), nhits_trd_(nhits_trd), dEdx_hits_(dEdx_hits), dEdx_is_scaled_(dEdxIsScaled) {
     nhits_sel_ = 0;
     for (int ihit = 0; ihit < NumberOfTrdLayers; ihit++)
       hits_sel_index_.at(ihit) = false;

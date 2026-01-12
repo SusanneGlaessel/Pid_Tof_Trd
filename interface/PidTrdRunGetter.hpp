@@ -6,7 +6,6 @@
 #include "ParticleProb.h"
 #include "GetterTrd.h"
 
-using std::make_pair;
 using std::array;
 
 class PidTrdRunGetter {

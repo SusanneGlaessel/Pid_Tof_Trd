@@ -116,6 +116,7 @@ void RunGetterTrd(TString InputFile = "pid_getter_trd.root") {
       std::cout << "pid hypothesis : " << pid_hypothesis << std::endl;
       std::cout << std::endl;
       
+      // Alternative, more flexible way to run getter:
       // Functions with options for truncation mode
       /*
       float min_purity = 0.2; // minimum required purity for pid hypothesis

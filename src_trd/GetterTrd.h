@@ -64,7 +64,7 @@ namespace PidTrd {
 
     array<TString, NumberOfProbMode> probnames_ = {"probT", "probL"};
     
-    ClassDef(GetterTrd, 2);
+    ClassDef(GetterTrd, 1);
   }; 
 }// namespace PidTrd
 #endif//PidTrd_Getter_H

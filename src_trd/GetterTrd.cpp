@@ -186,9 +186,9 @@ namespace PidTrd {
     auto prob_max = std::max_element(std::begin(prob_vec), std::end(prob_vec));
     auto prob_max_index = std::distance(prob_vec.begin(), prob_max);
     if (*prob_max >= purity)
-      pid = pid_codes_trd_.at(prob_max_index).first*charge;
+      pid = TMath::Sign(pid_codes_trd_.at(prob_max_index).first, charge);
     else
-      pid = 1*charge;
+      pid = TMath::Sign(1, charge);
     return pid;
   }
 }

@@ -8,7 +8,6 @@
 
 #include "ContainerTrd.h"
 
-using std::make_pair;
 using std::array;
 
 class PidTrdMcInput : public AnalysisTree::Task {

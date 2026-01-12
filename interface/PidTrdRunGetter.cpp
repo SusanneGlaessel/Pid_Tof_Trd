@@ -128,7 +128,7 @@ void PidTrdRunGetter::Init() {
 
   inFile_ = new TFile(mcfile_name_,"READ");
   if (!inFile_ || !inFile_->IsOpen()) {
-    throw runtime_error("Could not open input file: " + mcfile_name_);
+    throw std::runtime_error("Could not open input file: " + mcfile_name_);
   }
   
   OpenMcHistograms();

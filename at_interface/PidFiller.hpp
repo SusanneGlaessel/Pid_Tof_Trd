@@ -12,8 +12,6 @@
 
 #include "TH2F.h"
 
-using std::make_pair;
-
 class PidFiller : public AnalysisTree::Task {
 
  public:
@@ -33,16 +31,36 @@ class PidFiller : public AnalysisTree::Task {
   void SetRichRingsName(const std::string& name) { rich_rings_name_ = name; };
 
   // Settings for Trd Pid
-  void SetMinHits(int nhits_min) { nhits_min_ = nhits_min; }            // Min. number of hits per track
-  void SetTruncationMode(int trunc_mode) { trunc_mode_ = trunc_mode; }  // Calculation of energy loss for up to 4 layers:
-                                                                        // =0: <dEdx> average over all hits
-                                                                        // =1-4: Select hits with lowest dEdx:
-                                                                        // =1: 1 hit, =2: 2 hits, =3: 3 hits, =4: 4 hits
-  void SetProbabilityMode(int prob_mode) { prob_mode_ = prob_mode; }    // Probability for particle species i:
-                                                                        // =0: total probability - probability based on particle multiplicites i
-									// =1: likelihood - probability based on dEdx-distribution of particle
+  void SetMinHits(int nhits_min) {                                      // Min. number of hits per track
+    if (nhits_min < 1 || nhits_min > 4)
+      throw std::runtime_error("Wrong number of minimum hits: Number of minimum hits need to be between 1 and 4!");
+    else
+      nhits_min_ = nhits_min;
+  }            
+  void SetTruncationMode(int trunc_mode) {                             // Calculation of energy loss for up to 4 layers:
+                                                                       // =0: <dEdx> average over all hits
+    if (trunc_mode < 0 || trunc_mode > 4)                              // =1-4: Select hits with lowest dEdx: 1 hit, =2: 2 hits, =3: 3 hits, =4: 4 hits
+      throw std::runtime_error("Wrong index for truncation mode: Truncation mode needs to be between 0 and 4!");
+    else
+      trunc_mode_ = trunc_mode;
+  }  
+                                                                     
+  void SetProbabilityMode(int prob_mode) {                             // Probability for particle species i:
+                                                                       // =0: total probability - probability based on particle multiplicites i
+    if (prob_mode < 0 || prob_mode > 1)                                // =1: likelihood - probability based on dEdx-distribution of particle
+      throw std::runtime_error("Wrong index for probability mode: Truncation mode needs to be between 0 and 4!");
+    else
+      prob_mode_ = prob_mode;
+  }    
+                                                                        
+									
   
-  void SetPurity(const float purity) { purity_ = purity; }
+  void SetPurity(const float purity) {                                 // Minium purity for pid-hypothesis
+    if (purity < 0.0 || purity > 1.0)
+      throw std::runtime_error("Wrong value " + std::to_string(purity) + " for purity: Purity needs to be between 0.0 and 1.0!");
+    else
+    purity_ = purity;
+  }
   
  protected:
   int signum(int x) const;

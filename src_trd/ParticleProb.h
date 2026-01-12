@@ -12,7 +12,6 @@
 #include "TFile.h"
 #include "TH2F.h"
 
-using std::make_pair;
 using std::array;
 
 namespace PidTrd {

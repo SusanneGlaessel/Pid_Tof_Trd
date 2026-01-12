@@ -9,8 +9,8 @@ int calculate_mcprob_trd(const std::string& mcfile_name) {
 
   TString macroname = "create_getter";
  
-  const std::string& getter_file = "pid_getter_trd.root";
-  const std::string& getter_name = "pid_getter_trd";
+  const std::string getter_file = "pid_getter_trd.root";
+  const std::string getter_name = "pid_getter_trd";
     
   TString outFile;
   if (write_mchistos_out == kTRUE) {

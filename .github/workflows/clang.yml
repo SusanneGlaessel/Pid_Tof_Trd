@@ -11,5 +11,5 @@ jobs:
       - uses: actions/checkout@v2
       - uses: RafikFarhad/clang-format-github-action@v2.0.0
         with:
-          sources: "src/*.cpp src/*.h pid_new/*/*.cpp pid_new/*/*.h macro/*.C tasks/*.cpp input/*.C at_interface/*pp"
+          sources: "src_tof/*.cpp src_tof/*.h src_trd/*.cpp src_trd/*.h pid_new/*/*.cpp pid_new/*/*.h macro/*.C tasks/*.cpp input/*.C at_interface/*pp interface/*pp"
           style: file

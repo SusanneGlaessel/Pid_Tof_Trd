@@ -1,3 +1,5 @@
 Doxygen/*
 *build*/*
 *install*/*
+.DS_Store
+*/.DS_Store
