@@ -43,22 +43,22 @@ void run_pid_dcm12() {
 
   // Fit positively charged pions
   std::cout << "\n\npionpos\n";
-  xmin = 0.25, xmax = 10.5, ymin = -2., ymax = 2.; // set ranges for fitting: x - p; y - m2
-  tof.SetChi2Max(10000); // set maximal chi2 of fitting to be visualized
+  xmin = 0.25, xmax = 10.5, ymin = -2., ymax = 2.;// set ranges for fitting: x - p; y - m2
+  tof.SetChi2Max(10000);                          // set maximal chi2 of fitting to be visualized
 
   // Set input histogram.
   // In this task we use the reco_vs_sim_info_via_vtx folder - with "TOF hit - reconstructed track - simulated particles" matching, see ReadMe.
   std::shared_ptr<TH2D> hpionpos{(TH2D*) fIn->Get("reco_vs_sim_info_via_vtx/h2TofM2_piplus")};
-  std::shared_ptr<TH2D> hpionpos_cut{(TH2D*) cutTH2(hpionpos, (TCutG*) fCuts->Get("piplus"))}; // Set graphic cuts for pions.
+  std::shared_ptr<TH2D> hpionpos_cut{(TH2D*) cutTH2(hpionpos, (TCutG*) fCuts->Get("piplus"))};// Set graphic cuts for pions.
   hpionpos_cut->Rebin2D(10, 1);
-  TF1 fit_pionpos("fit_pionpos", "gaus", ymin, ymax); // Fit pions yield as a function of m2 in a certain momentum p range with a gaussian function.
-  fit_pionpos.SetParNames("p0", "p1", "p2"); // p0 - height in a maximum, p1 - mean value, p2 - sigma.
+  TF1 fit_pionpos("fit_pionpos", "gaus", ymin, ymax);// Fit pions yield as a function of m2 in a certain momentum p range with a gaussian function.
+  fit_pionpos.SetParNames("p0", "p1", "p2");         // p0 - height in a maximum, p1 - mean value, p2 - sigma.
   fit_pionpos.SetParLimits(0, 0., 4.e6);
   fit_pionpos.SetParLimits(1, -.25, 0.03);
   fit_pionpos.SetParLimits(2, 0., 0.7);
-  TF1 pionpos_0("pionpos_0", "0", xmin, xmax); // "0" means do not fit the p0 as a function of momentum p, just remeber all the values.
-  TF1 pionpos_1("pionpos_1", "pol9", xmin, xmax); // Fit p1 as a function of momentum p with 9-th order polynomial.
-  TF1 pionpos_2("pionpos_2", "pol9", xmin, xmax); // Fit p2 as a function of momentum p with 9-th order polynomial.
+  TF1 pionpos_0("pionpos_0", "0", xmin, xmax);   // "0" means do not fit the p0 as a function of momentum p, just remeber all the values.
+  TF1 pionpos_1("pionpos_1", "pol9", xmin, xmax);// Fit p1 as a function of momentum p with 9-th order polynomial.
+  TF1 pionpos_2("pionpos_2", "pol9", xmin, xmax);// Fit p2 as a function of momentum p with 9-th order polynomial.
 
   Pid::ParticleFit pionpos(PidTofParticles::kPionPos);
   pionpos.SetParametrization({pionpos_0, pionpos_1, pionpos_2});
@@ -175,29 +175,29 @@ void run_pid_dcm12() {
   std::cout << "\n\ndeutron\n";
   xmin = 1.3, xmax = 20., ymin = -3., ymax = 6.;
   tof.SetChi2Max(1000);
-  std::shared_ptr <TH2D> hdeutron {(TH2D*) fIn->Get("reco_vs_sim_info_via_vtx/h2TofM2_d")};
-  std::shared_ptr <TH2D> hdeutron_cut {(TH2D*) cutTH2 (hdeutron, (TCutG*) fCuts->Get("deutron"))};
+  std::shared_ptr<TH2D> hdeutron{(TH2D*) fIn->Get("reco_vs_sim_info_via_vtx/h2TofM2_d")};
+  std::shared_ptr<TH2D> hdeutron_cut{(TH2D*) cutTH2(hdeutron, (TCutG*) fCuts->Get("deutron"))};
 
-  hdeutron_cut->Rebin2D(10,25);
-  TF1 fit_deutron ("fit_deutron", "gaus", ymin, ymax);
-  fit_deutron.SetParNames ("p12", "p13", "p14");
-  fit_deutron.SetParLimits (0, 0., 6.e4);
-  fit_deutron.SetParLimits (1, 2.5, 3.6);
-  fit_deutron.SetParLimits (2, 0., 2.5);
-  TF1 deutron_0 ("deutron_0", "0", xmin, xmax);
-  TF1 deutron_1 ("deutron_1", "pol6", xmin, xmax);
-  TF1 deutron_2 ("deutron_2", "pol10", xmin, xmax);
-  
-  Pid::ParticleFit deutron( PidTofParticles::kProton );
-  deutron.SetParametrization({ deutron_0, deutron_1, deutron_2 });
+  hdeutron_cut->Rebin2D(10, 25);
+  TF1 fit_deutron("fit_deutron", "gaus", ymin, ymax);
+  fit_deutron.SetParNames("p12", "p13", "p14");
+  fit_deutron.SetParLimits(0, 0., 6.e4);
+  fit_deutron.SetParLimits(1, 2.5, 3.6);
+  fit_deutron.SetParLimits(2, 0., 2.5);
+  TF1 deutron_0("deutron_0", "0", xmin, xmax);
+  TF1 deutron_1("deutron_1", "pol6", xmin, xmax);
+  TF1 deutron_2("deutron_2", "pol10", xmin, xmax);
+
+  Pid::ParticleFit deutron(PidTofParticles::kProton);
+  deutron.SetParametrization({deutron_0, deutron_1, deutron_2});
   deutron.SetFitFunction(fit_deutron);
-  deutron.SetRange( xmin, xmax );
+  deutron.SetRange(xmin, xmax);
   deutron.SetIsFitted();
-  
+
   tof.AddParticle(deutron, PidTofParticles::kDeutron);
-  tof.SetHisto2D( std::move(hdeutron_cut) );
-  tof.SetRangeX( xmin, xmax );
-  tof.SetRangeY( ymin, ymax );
+  tof.SetHisto2D(std::move(hdeutron_cut));
+  tof.SetRangeX(xmin, xmax);
+  tof.SetRangeY(ymin, ymax);
   tof.SetOutputFileName("deutron.root");
   tof.Fit();
   deutron = tof.GetParticle(0);
@@ -211,9 +211,9 @@ void run_pid_dcm12() {
   std::cout << "\n\nbgpos\n";
   xmin = 0.3, xmax = 20., ymin = -3., ymax = 3.;
   Pid::ParticleFit bgpos(PidTofParticles::kBgPos);
-  TF1 bgpos_fit("fit_bgpos", "pol2", ymin, ymax); // Fit BG as a function of m2 in a certain momentum p range with a second order polynomial
-  bgpos_fit.SetParNames("p15", "p16", "p17"); // p15 is a free term, p16 - a linear term, p17 - a square term
-  TF1 bgpos_0("bgpos_0", "pol3", xmin, xmax); // Fit p15, p16, p17 as functions of momentum p with a third order polynomial
+  TF1 bgpos_fit("fit_bgpos", "pol2", ymin, ymax);// Fit BG as a function of m2 in a certain momentum p range with a second order polynomial
+  bgpos_fit.SetParNames("p15", "p16", "p17");    // p15 is a free term, p16 - a linear term, p17 - a square term
+  TF1 bgpos_0("bgpos_0", "pol3", xmin, xmax);    // Fit p15, p16, p17 as functions of momentum p with a third order polynomial
   TF1 bgpos_1("bgpos_1", "pol3", xmin, xmax);
   TF1 bgpos_2("bgpos_2", "pol3", xmin, xmax);
 
@@ -225,7 +225,7 @@ void run_pid_dcm12() {
 
   std::cout << "\n\nallpos\n";
   xmin = 0.3, xmax = 20., ymin = -6., ymax = 6.;
-  std::unique_ptr<TH2D> hpos{(TH2D*) fIn->Get("reco_info/h2TofM2")}; // Set the input histogram
+  std::unique_ptr<TH2D> hpos{(TH2D*) fIn->Get("reco_info/h2TofM2")};// Set the input histogram
   hpos->Rebin2D(10, 1);
   tof.SetChi2Max(10000);
 
@@ -235,7 +235,7 @@ void run_pid_dcm12() {
   pionpos.SetIsFixed({false, true, true});
   kaonpos.SetIsFixed({false, true, true});
   proton.SetIsFixed({false, true, true});
-  deutron.SetIsFixed( {false, true, true} );
+  deutron.SetIsFixed({false, true, true});
   //  he3.SetIsFixed( {false, true, true} );
   tof.AddParticle(pionpos, PidTofParticles::kPionPos);
   tof.AddParticle(kaonpos, PidTofParticles::kKaonPos);

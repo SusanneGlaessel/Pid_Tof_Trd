@@ -38,7 +38,7 @@ const std::unordered_map<int, float> masses =
         {kHe3, 2.793},
         {kHe4, 3.724},
 };
-}// namespace PidParticles
+}// namespace PidTofParticles
 
 namespace PidFunction {
 enum eNames {

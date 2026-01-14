@@ -167,5 +167,5 @@ class CutGGetter : public TObject, public BaseGetter {
   ClassDefOverride(Pid::CutGGetter, 1)
 };
 
-}// namespace PidTof
+}// namespace Pid
 #endif// PidGetterTof_H

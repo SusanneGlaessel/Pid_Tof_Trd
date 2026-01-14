@@ -3,9 +3,9 @@
 
 #include "ConstantsTof.h"
 #include "ConstantsTrd.h"
+#include "ContainerTrd.h"
 #include "GetterTof.h"
 #include "GetterTrd.h"
-#include "ContainerTrd.h"
 
 #include "AnalysisTree/Task.hpp"
 #include "AnalysisTree/TaskManager.hpp"
@@ -15,8 +15,11 @@
 class PidFiller : public AnalysisTree::Task {
 
  public:
-  PidFiller(const std::string& pid_file_name_tof, const std::string& pid_file_name_trd, const std::string& getter_name_tof,  const std::string& getter_name_trd, int pid_mode);
-  ~PidFiller() override { delete getter_tof_; delete getter_trd_; }
+  PidFiller(const std::string& pid_file_name_tof, const std::string& pid_file_name_trd, const std::string& getter_name_tof, const std::string& getter_name_trd, int pid_mode);
+  ~PidFiller() override {
+    delete getter_tof_;
+    delete getter_trd_;
+  }
 
   void Init() override;
   void Exec() override;
@@ -26,50 +29,47 @@ class PidFiller : public AnalysisTree::Task {
   }
 
   void SetRecTracksName(const std::string& name) { rec_tracks_name_ = name; }
-  void SetTofHitsName(const std::string& name)   { tof_hits_name_   = name; }
+  void SetTofHitsName(const std::string& name) { tof_hits_name_ = name; }
   void SetTrdTracksName(const std::string& name) { trd_tracks_name_ = name; };
   void SetRichRingsName(const std::string& name) { rich_rings_name_ = name; };
 
   // Settings for Trd Pid
-  void SetMinHits(int nhits_min) {                                      // Min. number of hits per track
+  void SetMinHits(int nhits_min) {// Min. number of hits per track
     if (nhits_min < 1 || nhits_min > 4)
       throw std::runtime_error("Wrong number of minimum hits: Number of minimum hits need to be between 1 and 4!");
     else
       nhits_min_ = nhits_min;
-  }            
-  void SetTruncationMode(int trunc_mode) {                             // Calculation of energy loss for up to 4 layers:
-                                                                       // =0: <dEdx> average over all hits
-    if (trunc_mode < 0 || trunc_mode > 4)                              // =1-4: Select hits with lowest dEdx: 1 hit, =2: 2 hits, =3: 3 hits, =4: 4 hits
+  }
+  void SetTruncationMode(int trunc_mode) {// Calculation of energy loss for up to 4 layers:
+                                          // =0: <dEdx> average over all hits
+    if (trunc_mode < 0 || trunc_mode > 4) // =1-4: Select hits with lowest dEdx: 1 hit, =2: 2 hits, =3: 3 hits, =4: 4 hits
       throw std::runtime_error("Wrong index for truncation mode: Truncation mode needs to be between 0 and 4!");
     else
       trunc_mode_ = trunc_mode;
-  }  
-                                                                     
-  void SetProbabilityMode(int prob_mode) {                             // Probability for particle species i:
-                                                                       // =0: total probability - probability based on particle multiplicites i
-    if (prob_mode < 0 || prob_mode > 1)                                // =1: likelihood - probability based on dEdx-distribution of particle
+  }
+
+  void SetProbabilityMode(int prob_mode) {// Probability for particle species i:
+                                          // =0: total probability - probability based on particle multiplicites i
+    if (prob_mode < 0 || prob_mode > 1)   // =1: likelihood - probability based on dEdx-distribution of particle
       throw std::runtime_error("Wrong index for probability mode: Truncation mode needs to be between 0 and 4!");
     else
       prob_mode_ = prob_mode;
-  }    
-                                                                        
-									
-  
-  void SetPurity(const float purity) {                                 // Minium purity for pid-hypothesis
+  }
+
+  void SetPurity(const float purity) {// Minium purity for pid-hypothesis
     if (purity < 0.0 || purity > 1.0)
       throw std::runtime_error("Wrong value " + std::to_string(purity) + " for purity: Purity needs to be between 0.0 and 1.0!");
     else
-    purity_ = purity;
+      purity_ = purity;
   }
-  
+
  protected:
   int signum(int x) const;
-
 
   float GetMomentumTrd(const AnalysisTree::BranchChannel& trd_particle);
   float GetPtTrd(const AnalysisTree::BranchChannel& trd_particle);
   int GetCharge(const AnalysisTree::BranchChannel& trd_particle);
-  void GetEnergyLossHitsTrd(const AnalysisTree::BranchChannel& trd_track, int &nhits_trd, std::array<float, NumberOfTrdLayers> &dEdx);
+  void GetEnergyLossHitsTrd(const AnalysisTree::BranchChannel& trd_track, int& nhits_trd, std::array<float, NumberOfTrdLayers>& dEdx);
   bool IsRichElectron(const AnalysisTree::BranchChannel& rec_particle);
 
   AnalysisTree::Branch rec_tracks_;
@@ -89,7 +89,7 @@ class PidFiller : public AnalysisTree::Task {
   std::vector<AnalysisTree::Field> prob_tof_field_{};
 
   // Trd fields
-  std::vector<AnalysisTree::Field> trd_dEdx_field_{};  
+  std::vector<AnalysisTree::Field> trd_dEdx_field_{};
   AnalysisTree::Field el_rich_field_;
   AnalysisTree::Field pid_trd_field_;
   AnalysisTree::Field nhits_trd_eloss_field_;
@@ -98,11 +98,11 @@ class PidFiller : public AnalysisTree::Task {
   std::vector<AnalysisTree::Matching*> in_matches_{};
   std::vector<AnalysisTree::Matching*> out_matches_{};
 
-  std::string rec_tracks_name_{"VtxTracks"};    // Branch with input tracks
-  std::string tof_hits_name_{"TofHits"};        // Branch with TOF info (m2)
-  std::string trd_tracks_name_{"TrdTracks"};    // Branch with Trd info (dEdx)
-  std::string rich_rings_name_{"RichRings"};    // Branch with Rich info
-  std::string out_branch_name_{"RecParticles"}; // Output branch (based on VtxTracks) with pid info: probabilities and particle type hypothesis
+  std::string rec_tracks_name_{"VtxTracks"};   // Branch with input tracks
+  std::string tof_hits_name_{"TofHits"};       // Branch with TOF info (m2)
+  std::string trd_tracks_name_{"TrdTracks"};   // Branch with Trd info (dEdx)
+  std::string rich_rings_name_{"RichRings"};   // Branch with Rich info
+  std::string out_branch_name_{"RecParticles"};// Output branch (based on VtxTracks) with pid info: probabilities and particle type hypothesis
 
   bool is_run_pid_tof_{false};
   bool is_run_pid_trd_{false};

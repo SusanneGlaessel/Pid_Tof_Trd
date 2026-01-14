@@ -22,11 +22,11 @@ int main(int argc, char** argv) {
 void RunGetterTof(TString InputFile = "pid_getter_tof.root") {
 
   TFile* f2{TFile::Open(InputFile)};
-  
+
   std::unique_ptr<Pid::GetterTof> getter{(Pid::GetterTof*) f2->Get("pid_getter_tof")};
   std::unique_ptr<TRandom> r{new TRandom};
 
-//   std::vector<int> fittedPids = {PidTofParticles::kBgPos, PidTofParticles::kPionPos, PidTofParticles::kKaonPos, PidTofParticles::kProton, PidTofParticles::kHe3, PidTofParticles::kDeutron, PidTofParticles::kBgNeg, PidTofParticles::kPionNeg, PidTofParticles::kKaonNeg};
+  //   std::vector<int> fittedPids = {PidTofParticles::kBgPos, PidTofParticles::kPionPos, PidTofParticles::kKaonPos, PidTofParticles::kProton, PidTofParticles::kHe3, PidTofParticles::kDeutron, PidTofParticles::kBgNeg, PidTofParticles::kPionNeg, PidTofParticles::kKaonNeg};
   std::vector<int> fittedPids = {PidTofParticles::kBgPos, PidTofParticles::kPionPos, PidTofParticles::kKaonPos, PidTofParticles::kProton, PidTofParticles::kBgNeg, PidTofParticles::kPionNeg, PidTofParticles::kKaonNeg};
 
   std::map<int, TH2F*> h2Purity;
@@ -56,7 +56,7 @@ void RunGetterTof(TString InputFile = "pid_getter_tof.root") {
     h2Purity.at(pid)->GetYaxis()->SetTitleOffset(1.4);
     h2Purity.at(pid)->SetMinimum(0.5);
   }
-  
+
   /*
     for (int i=0; i<10; ++i)
     {
@@ -74,5 +74,4 @@ void RunGetterTof(TString InputFile = "pid_getter_tof.root") {
     
     f2->Close();
   */
-
 }

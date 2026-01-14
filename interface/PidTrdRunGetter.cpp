@@ -4,74 +4,77 @@ using std::to_string;
 
 void PidTrdRunGetter::CalculateProbabilities(int nhits) {
 
-  TH2F* h2pos; TH2F* h2neg; TH2F* h2tmp; TH2F* h2prob;
+  TH2F* h2pos;
+  TH2F* h2neg;
+  TH2F* h2tmp;
+  TH2F* h2prob;
   TString histname;
   PidTrd::ParticleProb particleprob;
-  
+
   for (int truncmode = 0; truncmode < nhits + 1; truncmode++) {
-    inFile_->cd(dirname_tracks_ + "/" + dirname_nhits_.at(nhits) + "/reco_info");   
+    inFile_->cd(dirname_tracks_ + "/" + dirname_nhits_.at(nhits) + "/reco_info");
     h2pos = (TH2F*) gDirectory->Get(histnames_all_pos_.at(truncmode));
     h2neg = (TH2F*) gDirectory->Get(histnames_all_neg_.at(truncmode));
 
     for (int ipdg = 0; ipdg < NumberOfPidsTrd - 1; ipdg++) {
       TString particlename = pid_codes_trd_.at(ipdg).second.Data();
-      int charge = 1; // charge = 1: positive particles
+      int charge = 1;// charge = 1: positive particles
 
-      int probmode = 0; // total probability - probability based on particle multiplicites
+      int probmode = 0;// total probability - probability based on particle multiplicites
       inFile_->cd(dirname_tracks_ + "/" + dirname_nhits_.at(nhits) + "/reco_vs_sim_info/" + pid_codes_trd_.at(ipdg).second);
       h2tmp = (TH2F*) gDirectory->Get(histnames_pos_.at(truncmode).at(ipdg));
       h2prob = (TH2F*) h2tmp->Clone(histnames_prob_pos_.at(truncmode).at(ipdg));
       CalculateProbabilitiesTot(h2pos, h2tmp, h2prob);
-      h2prob -> SetTitle(Form("dEdx : p_{rec} probability (T) (%s+) %d Trd Hits - %s", pid_codes_trd_.at(ipdg).second.Data(), nhits+1, histtitle_mode_.at(truncmode).Data()));
+      h2prob->SetTitle(Form("dEdx : p_{rec} probability (T) (%s+) %d Trd Hits - %s", pid_codes_trd_.at(ipdg).second.Data(), nhits + 1, histtitle_mode_.at(truncmode).Data()));
       particleprob.Update(ipdg, charge, nhits, truncmode, probmode, h2prob);
       getter_trd_.AddParticleProb(particleprob);
       if (write_mchistograms_out_ == kTRUE)
-	outFile_->cd(dirname_nhits_.at(nhits) + "/" + particlename + "/" + probname_.at(0)) && h2prob -> Write("",TObject::kOverwrite);
+        outFile_->cd(dirname_nhits_.at(nhits) + "/" + particlename + "/" + probname_.at(0)) && h2prob->Write("", TObject::kOverwrite);
 
-      probmode = 1;  // likelihood - probability based on dEdx-distribution of particle
+      probmode = 1;// likelihood - probability based on dEdx-distribution of particle
       inFile_->cd(dirname_hits_ + "/" + dirname_nhits_.at(nhits) + "/reco_vs_sim_info/" + pid_codes_trd_.at(ipdg).second);
       h2tmp = (TH2F*) gDirectory->Get(histnames_pos_.at(truncmode).at(ipdg));
       h2prob = (TH2F*) h2tmp->Clone(histnames_prob_pos_.at(truncmode).at(ipdg));
       CalculateProbabilitiesLike(h2tmp, h2prob);
-      h2prob -> SetTitle(Form("dEdx : p_{rec} probability (L) (%s+) %d Trd Hits - %s", pid_codes_trd_.at(ipdg).second.Data(), nhits+1, histtitle_mode_.at(truncmode).Data()));
+      h2prob->SetTitle(Form("dEdx : p_{rec} probability (L) (%s+) %d Trd Hits - %s", pid_codes_trd_.at(ipdg).second.Data(), nhits + 1, histtitle_mode_.at(truncmode).Data()));
       particleprob.Update(ipdg, charge, nhits, truncmode, probmode, h2prob);
       getter_trd_.AddParticleProb(particleprob);
       if (write_mchistograms_out_ == kTRUE)
-	outFile_->cd(dirname_nhits_.at(nhits) + "/" + particlename + "/" + probname_.at(1)) && h2prob -> Write("",TObject::kOverwrite);     
+        outFile_->cd(dirname_nhits_.at(nhits) + "/" + particlename + "/" + probname_.at(1)) && h2prob->Write("", TObject::kOverwrite);
 
-      charge = -1;  // charge = -1: negative particles
+      charge = -1;// charge = -1: negative particles
       probmode = 0;
-      inFile_->cd(dirname_tracks_ + "/" + dirname_nhits_.at(nhits) + "/reco_vs_sim_info/" + pid_codes_trd_.at(ipdg).second);   
-      h2tmp = (TH2F*) gDirectory->Get(histnames_neg_.at(truncmode).at(ipdg));   
+      inFile_->cd(dirname_tracks_ + "/" + dirname_nhits_.at(nhits) + "/reco_vs_sim_info/" + pid_codes_trd_.at(ipdg).second);
+      h2tmp = (TH2F*) gDirectory->Get(histnames_neg_.at(truncmode).at(ipdg));
       h2prob = (TH2F*) h2tmp->Clone(histnames_prob_neg_.at(truncmode).at(ipdg));
       CalculateProbabilitiesTot(h2neg, h2tmp, h2prob);
-      h2prob -> SetTitle(Form("dEdx : p_{rec} probability (T) (%s-) %d Trd Hits - %s", pid_codes_trd_.at(ipdg).second.Data(), nhits+1, histtitle_mode_.at(truncmode).Data()));
+      h2prob->SetTitle(Form("dEdx : p_{rec} probability (T) (%s-) %d Trd Hits - %s", pid_codes_trd_.at(ipdg).second.Data(), nhits + 1, histtitle_mode_.at(truncmode).Data()));
       particleprob.Update(ipdg, charge, nhits, truncmode, probmode, h2prob);
       getter_trd_.AddParticleProb(particleprob);
       if (write_mchistograms_out_ == kTRUE)
-	outFile_->cd(dirname_nhits_.at(nhits) + "/" + particlename + "/" + probname_.at(0)) && h2prob -> Write("",TObject::kOverwrite);
-      
+        outFile_->cd(dirname_nhits_.at(nhits) + "/" + particlename + "/" + probname_.at(0)) && h2prob->Write("", TObject::kOverwrite);
+
       probmode = 1;
-      inFile_->cd(dirname_hits_ + "/" + dirname_nhits_.at(nhits) + "/reco_vs_sim_info/" + pid_codes_trd_.at(ipdg).second);   
+      inFile_->cd(dirname_hits_ + "/" + dirname_nhits_.at(nhits) + "/reco_vs_sim_info/" + pid_codes_trd_.at(ipdg).second);
       h2tmp = (TH2F*) gDirectory->Get(histnames_neg_.at(truncmode).at(ipdg));
       h2prob = (TH2F*) h2tmp->Clone(histnames_prob_neg_.at(truncmode).at(ipdg));
       CalculateProbabilitiesLike(h2tmp, h2prob);
-      h2prob -> SetTitle(Form("dEdx : p_{rec} probability (L) (%s-) %d Trd Hits - %s", pid_codes_trd_.at(ipdg).second.Data(), nhits+1, histtitle_mode_.at(truncmode).Data()));
+      h2prob->SetTitle(Form("dEdx : p_{rec} probability (L) (%s-) %d Trd Hits - %s", pid_codes_trd_.at(ipdg).second.Data(), nhits + 1, histtitle_mode_.at(truncmode).Data()));
       particleprob.Update(ipdg, charge, nhits, truncmode, probmode, h2prob);
       getter_trd_.AddParticleProb(particleprob);
       if (write_mchistograms_out_ == kTRUE)
-	outFile_->cd(dirname_nhits_.at(nhits) + "/" + particlename + "/" + probname_.at(1)) && h2prob -> Write("",TObject::kOverwrite);
+        outFile_->cd(dirname_nhits_.at(nhits) + "/" + particlename + "/" + probname_.at(1)) && h2prob->Write("", TObject::kOverwrite);
     }
   }
-  h2tmp -> Delete();
+  h2tmp->Delete();
 }
 
-void PidTrdRunGetter::CalculateProbabilitiesTot(TH2F* h2all, TH2F* h2tmp, TH2F* &h2prob) {
+void PidTrdRunGetter::CalculateProbabilitiesTot(TH2F* h2all, TH2F* h2tmp, TH2F*& h2prob) {
   h2prob->Divide(h2all);
 }
 
-void PidTrdRunGetter::CalculateProbabilitiesLike(TH2F* h2tmp, TH2F* &h2prob) {
-  for (Int_t ibinx = 1; ibinx  < h2tmp->GetNbinsX() + 1; ibinx ++) {
+void PidTrdRunGetter::CalculateProbabilitiesLike(TH2F* h2tmp, TH2F*& h2prob) {
+  for (Int_t ibinx = 1; ibinx < h2tmp->GetNbinsX() + 1; ibinx++) {
     Double_t sumy = 0.;
     for (Int_t ibiny = 1; ibiny < h2tmp->GetNbinsY() + 1; ibiny++)
       sumy += h2tmp->GetBinContent(ibinx, ibiny);
@@ -81,7 +84,7 @@ void PidTrdRunGetter::CalculateProbabilitiesLike(TH2F* h2tmp, TH2F* &h2prob) {
 }
 
 void PidTrdRunGetter::InitMcHistogramsOut() {
-  
+
   TDirectory *directory, *directory1, *directory2;
 
   for (int imode = 0; imode < NumberOfTruncMode - 1; imode++) {
@@ -105,7 +108,7 @@ void PidTrdRunGetter::InitMcHistogramsOut() {
 
 void PidTrdRunGetter::OpenMcHistograms() {
 
-  for (int imode = 0; imode < NumberOfTruncMode-1; imode++) {
+  for (int imode = 0; imode < NumberOfTruncMode - 1; imode++) {
     histnames_all_pos_.at(imode) = "h2dEdx_p_pos_" + to_string(imode);
     histnames_all_neg_.at(imode) = "h2dEdx_p_neg_" + to_string(imode);
     for (int ipdg = 0; ipdg < NumberOfPidsTrd - 1; ipdg++) {
@@ -126,28 +129,28 @@ void PidTrdRunGetter::OpenMcHistograms() {
 
 void PidTrdRunGetter::Init() {
 
-  inFile_ = new TFile(mcfile_name_,"READ");
+  inFile_ = new TFile(mcfile_name_, "READ");
   if (!inFile_ || !inFile_->IsOpen()) {
     throw std::runtime_error("Could not open input file: " + mcfile_name_);
   }
-  
+
   OpenMcHistograms();
-  
+
   if (write_mchistograms_out_ == kTRUE) {
     TString name = mcfile_name_;
-    name.Replace(name.Index(".root"),5,"");
+    name.Replace(name.Index(".root"), 5, "");
     TString outfilename = Form("%s_probabilities.root", name.Data());
-    outFile_ = new TFile(outfilename,"RECREATE");
+    outFile_ = new TFile(outfilename, "RECREATE");
     InitMcHistogramsOut();
   }
 }
 
 void PidTrdRunGetter::Exec() {
 
-  for (int inhits = 0; inhits < NumberOfTrdLayers; inhits++) 
+  for (int inhits = 0; inhits < NumberOfTrdLayers; inhits++)
     CalculateProbabilities(inhits);
-  
-  std::unique_ptr <TFile> outFile_getter{TFile::Open(getter_file_, "recreate")};
+
+  std::unique_ptr<TFile> outFile_getter{TFile::Open(getter_file_, "recreate")};
   outFile_getter->WriteObject(&getter_trd_, getter_name_);
   outFile_getter->Close();
 
@@ -158,4 +161,3 @@ void PidTrdRunGetter::Finish() {
   inFile_->Close();
   if (write_mchistograms_out_ == kTRUE) outFile_->Close();
 }
-

@@ -1,8 +1,1 @@
-source ${ROOT_BINDIR}/thisroot.sh
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CMAKE_INSTALL_PREFIX}/lib
-export ROOT_INCLUDE_PATH=$ROOT_INCLUDE_PATH:${CMAKE_INSTALL_PREFIX}/include
-export ROOT_INCLUDE_PATH=$ROOT_INCLUDE_PATH:${CMAKE_INSTALL_PREFIX}/include/pid
-if [ -f "${CMAKE_INSTALL_PREFIX}/bin/AnalysisTreeConfig.sh" ]
-then
-source ${CMAKE_INSTALL_PREFIX}/bin/AnalysisTreeConfig.sh
-fi
+source ${ROOT_BINDIR} / thisroot.sh export LD_LIBRARY_PATH = $LD_LIBRARY_PATH : ${CMAKE_INSTALL_PREFIX} / lib export ROOT_INCLUDE_PATH = $ROOT_INCLUDE_PATH : ${CMAKE_INSTALL_PREFIX} / include export ROOT_INCLUDE_PATH = $ROOT_INCLUDE_PATH : ${CMAKE_INSTALL_PREFIX} / include / pid if [-f "${CMAKE_INSTALL_PREFIX}/bin/AnalysisTreeConfig.sh"] then source $ { CMAKE_INSTALL_PREFIX } / bin / AnalysisTreeConfig.sh fi
