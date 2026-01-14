@@ -7,4 +7,5 @@
 #pragma link C++ class PidTrd::ParticleProb + ;
 #pragma link C++ class PidTrd::GetterTrd + ;
 
+
 #endif

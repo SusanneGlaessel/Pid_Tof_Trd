@@ -5,4 +5,4 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#endif//PID_INTERFACE_PIDLINKDEF_H_
+#endif //PID_INTERFACE_PIDLINKDEF_H_
