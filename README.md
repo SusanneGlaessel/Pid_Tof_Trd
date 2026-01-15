@@ -7,7 +7,7 @@ every track depending on its *m*<sup>2</sup> and its momentum and/or on its Trd-
 The procedure of particle identification with the  Tof-*m*<sup>2</sup> is described in Sec. 4.4 of this [thesis](https://publikationen.ub.uni-frankfurt.de/opus4/frontdoor/deliver/index/docId/51779/file/main.pdf).
 It consists of two steps - determination of particle type hypothesis (fitting) and application of hypothesis to a set of particles (filling).
 
-The procedure of particle identification with the the Trd-*dE/dx* is described in https://cbm-wiki.gsi.de/pub/PWG/Hadron/Pid_with_TRD_dEdx.pdf. It constists of three steps - creating of MC-input, calculating MC-probabilities and assigning probabilities and pid hypothesis to a set of particles (filling). In addition, the separtion of electrons and pions with the RICH detector is applied.
+The procedure of particle identification with the the Trd-*dE/dx* is described in [presentation](https://next.hessenbox.de/index.php/s/DJrpKEaH7zZzNDx). It constists of three steps - creating of MC-input, calculating MC-probabilities and assigning probabilities and pid hypothesis to a set of particles (filling). In addition, the separtion of electrons and pions with the RICH detector is applied.
 
 Running of these steps is described below, in section "First Run".
 
